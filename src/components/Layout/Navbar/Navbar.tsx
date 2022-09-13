@@ -1,9 +1,8 @@
+import { SiDatadog } from 'react-icons/si'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { SiDatadog } from 'react-icons/si'
 // components
-import { NavLinkCustom } from 'components'
-import { NavLink } from 'components'
+import { NavLink, NavLinkCustom } from 'components'
 // paths
 import { PathsEnum } from 'pages'
 
@@ -19,7 +18,9 @@ export const Navbar = () => {
         </NavLinkCustom>
       </div>
       <div>
-        <NavLink to={PathsEnum.dogs}>Dogs</NavLink>
+        <NavLink to={`${PathsEnum.dogs}/initial`}>Dogs</NavLink>
+        <NavLink to={`${PathsEnum.dogs}/smarter`}>Dogs smarter</NavLink>
+        <NavLink to={`${PathsEnum.dogs}/terminator`}>Dogs terminator</NavLink>
       </div>
     </StyledNavbar>
   )

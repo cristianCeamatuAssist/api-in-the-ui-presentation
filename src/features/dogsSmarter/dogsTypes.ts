@@ -2,7 +2,7 @@ export interface IBreedsApiResponse {
   totalItems: number
   page: number
   itemsPerPage: number
-  results: IBreed[]
+  data: IBreed[]
 }
 
 export interface IBreed {
@@ -24,12 +24,6 @@ export interface IBreedImage {
   id: string
   url: string
   width: number
-}
-
-export interface IUpdateTableRequest {
-  table: 'breedsTable'
-  prop: 'rows' | 'itemsPerPage' | 'totalItems' | 'page' | 'sorting'
-  value: string | number | null
 }
 
 export interface ITableState {

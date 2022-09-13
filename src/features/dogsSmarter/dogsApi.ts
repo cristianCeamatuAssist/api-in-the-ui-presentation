@@ -1,6 +1,6 @@
 import axios from 'axios'
+import { IBreedsApiResponse } from './dogsTypes'
 // features
-import { IBreedsApiResponse } from 'features/dogs'
 
 export const httpDogs = axios.create({
   baseURL: process.env.REACT_APP_DOGS_URL || 'https://api.thedogapi.com/',
@@ -13,7 +13,7 @@ const getBreeds = async (url: string): Promise<IBreedsApiResponse> => {
   const itemsPerPage = +res.headers['pagination-limit']
   const page = +res.headers['pagination-page']
 
-  return { results: res.data, totalItems, page, itemsPerPage }
+  return { data: res.data, totalItems, page, itemsPerPage }
 }
 
 export const dogsApi = {

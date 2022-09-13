@@ -21,7 +21,7 @@ export const TableBodyNoData = ({ iconComponent, title, subtitle, columnsCount, 
       <tr>
         <td>
           {iconComponent}
-          <h3>{title}</h3>
+          {title && <h3>{title}</h3>}
           {subtitle && <StyledSubtext>{subtitle}</StyledSubtext>}
         </td>
       </tr>

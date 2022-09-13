@@ -1,6 +1,4 @@
-// features
-
-import { ITableState } from 'features/dogsTerminator/dogsTypes'
+import { ITableState } from './dogsTypes'
 
 export const createApiQueryFromState = (state: ITableState) => {
   const { page, itemsPerPage, ordering, searchQuery, filters } = state

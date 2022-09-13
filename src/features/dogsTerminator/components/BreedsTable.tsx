@@ -1,32 +1,41 @@
-import styled, { css } from 'styled-components'
-import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from 'state'
+import styled from 'styled-components'
 // components
 import { Table, TableBodyCell, TableImage } from 'components'
-// features
-import { updateTableState, getBreeds } from 'features/dogs'
+import { updateTableState } from 'features/dogsTerminator/dogsSlice'
+import { useDogsBreeds } from '../dogsHooks'
+import { IBreedsApiResponse } from '../dogsTypes'
 
 export const BreedsTable = () => {
   // global state
-  const { itemsPerPage, page, totalItems, apiQuery, data, isLoading, error } = useAppSelector(
-    (state) => state.dogs.breedsTable,
-  )
+  const { itemsPerPage, page, totalItems, apiQuery } = useAppSelector((state) => state.dogsTerminator.breedsTable)
 
   // utils
   const dispatch = useAppDispatch()
 
-  // effects
-  useEffect(() => {
-    dispatch(getBreeds(apiQuery))
-  }, [apiQuery, dispatch])
+  // api
+  const {
+    data: breedsResponse,
+    isLoading,
+    error,
+  } = useDogsBreeds(apiQuery, {
+    onSuccess: (breedsResponse: IBreedsApiResponse) => {
+      console.log('breedsResponse', breedsResponse)
 
+      const { page, totalItems } = breedsResponse
+      dispatch(updateTableState({ table: 'breedsTable', updates: { page: page + 1, totalItems } }))
+      //   dispatch(updateTableState({ table: 'breedsTable', prop: 'totalItems', value: totalItems }))
+      //   if (!page) dispatch(updateTableState({ table: 'breedsTable', prop: 'page', value: newPage + 1 }))
+    },
+  })
+  console.log('breedsResponse', breedsResponse)
   // handlers
   const changeItemsPerPageHandler = (value: number | string) => {
-    dispatch(updateTableState({ table: 'breedsTable', prop: 'itemsPerPage', value }))
+    dispatch(updateTableState({ table: 'breedsTable', updates: { itemsPerPage: +value, page: 1 } }))
   }
 
   const changePageHandler = (value: number | string) => {
-    dispatch(updateTableState({ table: 'breedsTable', prop: 'page', value }))
+    dispatch(updateTableState({ table: 'breedsTable', updates: { page: +value } }))
   }
 
   // variables
@@ -38,7 +47,7 @@ export const BreedsTable = () => {
     { prop: 'picture', label: 'Picture' },
   ]
 
-  const rows = data?.map((breed) => {
+  const rows = breedsResponse?.data.map((breed) => {
     return {
       id: breed.id,
       name: breed.name,
@@ -63,9 +72,8 @@ export const BreedsTable = () => {
 }
 
 const Div = styled.div`
-  ${({ theme }) => css`
-    height: calc(100vh - ${theme.constants.navbarHeight} - ${theme.constants.tableHeadHeight});
-  `}
+  width: 100%;
+  height: 100%;
   box-shadow: ${({ theme }) => theme.shadows.light};
   border-radius: ${({ theme }) => theme.borderRadius};
   position: relative;

@@ -1,8 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { set } from 'lodash'
-// features
-import { createApiQueryFromState } from 'features'
-import { IBreed, ITableState, IUpdateTableRequest, dogsApi, DogsPathsEnum } from 'features/dogs'
+import { dogsApi } from './dogsApi'
+import { DogsPathsEnum, ITableState } from './dogsTypes'
+import { createApiQueryFromState } from './dogsUtils'
 
 export const getBreeds = createAsyncThunk('offers/getBreeds', async (query: string, { rejectWithValue }) => {
   try {
@@ -13,10 +12,10 @@ export const getBreeds = createAsyncThunk('offers/getBreeds', async (query: stri
   }
 })
 
+// ...more API thunks
+
 interface IDogsState {
-  breedsTable: ITableState & {
-    data: IBreed[] | null
-  }
+  breedsTable: ITableState
 }
 
 const initialState = {
@@ -38,19 +37,28 @@ const dogsSlice = createSlice({
   name: 'dogs',
   initialState,
   reducers: {
-    updateState(state, action) {
-      const { path, value } = action.payload
-      // https://dustinpfister.github.io/2018/12/04/lodash_set/
-      set(state, path, value)
+    setBreedsTablePage(state, action: PayloadAction<number>) {
+      state.breedsTable.page = action.payload
+      state.breedsTable.apiQuery = createApiQueryFromState(state.breedsTable)
     },
-    updateTableState(state, action: PayloadAction<IUpdateTableRequest>) {
-      const { table, prop, value } = action.payload
-      // https://dustinpfister.github.io/2018/12/04/lodash_set/
-      set(state, `${table}.${prop}`, value)
-
-      if (['itemsPerPage'].includes(prop)) state[table].page = 1
-      state[table].apiQuery = createApiQueryFromState(state[table])
+    setBreedsTableOrdering(state, action: PayloadAction<string>) {
+      state.breedsTable.page = 1
+      state.breedsTable.ordering = action.payload
+      state.breedsTable.apiQuery = createApiQueryFromState(state.breedsTable)
     },
+    setBreedTableFilters(state, action: PayloadAction<{ [k: string]: string[] }>) {
+      state.breedsTable.filters = action.payload
+      state.breedsTable.apiQuery = createApiQueryFromState(state.breedsTable)
+    },
+    setBreedTableSearchQuery(state, action: PayloadAction<string>) {
+      state.breedsTable.searchQuery = action.payload
+      state.breedsTable.apiQuery = createApiQueryFromState(state.breedsTable)
+    },
+    setBreedsTableItemsPerPage(state, action: PayloadAction<number>) {
+      state.breedsTable.itemsPerPage = action.payload
+      state.breedsTable.apiQuery = createApiQueryFromState(state.breedsTable)
+    },
+    // ... more and more methods for updates
   },
   extraReducers: (builder) => {
     builder.addCase(getBreeds.fulfilled, (state, action) => {
@@ -70,9 +78,16 @@ const dogsSlice = createSlice({
       state.breedsTable.isLoading = false
       state.breedsTable.error = action.payload
     })
+    // ... more thunks
   },
 })
 
-export const { updateState, updateTableState } = dogsSlice.actions
+export const {
+  setBreedsTablePage,
+  setBreedsTableOrdering,
+  setBreedTableFilters,
+  setBreedTableSearchQuery,
+  setBreedsTableItemsPerPage,
+} = dogsSlice.actions
 
 export const dogsReducer = dogsSlice.reducer

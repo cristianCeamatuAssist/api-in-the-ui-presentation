@@ -1,15 +1,15 @@
-import React from 'react'
-import styled from 'styled-components'
 import {
   IColumn,
-  IRow,
-  TableBodyNoData,
-  LoadingAnimation,
-  ISelectableRows,
   INoDataState,
+  IRow,
+  ISelectableRows,
+  LoadingAnimation,
   LoadingBox,
   NoContentBox,
+  TableBodyNoData,
 } from 'components'
+import React from 'react'
+import styled from 'styled-components'
 
 interface IProps {
   isLoading: boolean
@@ -29,13 +29,15 @@ export const TableBody = ({ isLoading, error, rows, columns, hiddenColumns, noDa
   return (
     <StyledTbody>
       <tr className="bg-white">
-        {isLoading && (
+        {isLoading ? (
           <td colSpan={columns?.length}>
             <LoadingBox message="Fetching resources..." />
           </td>
+        ) : (
+          ''
         )}
 
-        {error && !isLoading && (
+        {error && !isLoading ? (
           <td colSpan={columns?.length}>
             {' '}
             <TableBodyNoData
@@ -44,12 +46,16 @@ export const TableBody = ({ isLoading, error, rows, columns, hiddenColumns, noDa
               columnsCount={selectableRows ? columns.length + 1 : columns.length}
             />
           </td>
+        ) : (
+          ''
         )}
 
-        {!isLoading && !error && !rows?.length && (
+        {!isLoading && !error && !rows?.length ? (
           <td colSpan={columns?.length}>
             <NoContentBox message={noDataState?.title || 'No resources found'} />
           </td>
+        ) : (
+          ''
         )}
       </tr>
 

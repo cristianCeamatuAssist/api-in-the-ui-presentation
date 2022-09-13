@@ -1,5 +1,5 @@
 export enum PathsEnum {
-  defaultRoute = '/dogs',
+  defaultRoute = '/dogs/initial',
   dogs = '/dogs',
   // other
   other = '*',
