@@ -1,8 +1,8 @@
-import { useAppDispatch, useAppSelector } from 'state'
 import styled from 'styled-components'
 // components
 import { Table, TableBodyCell, TableImage } from 'components'
 import { updateTableState } from 'features/dogsTerminator/dogsSlice'
+import { useAppDispatch, useAppSelector } from 'state'
 import { useDogsBreeds } from '../dogsHooks'
 import { IBreedsApiResponse } from '../dogsTypes'
 
@@ -12,7 +12,6 @@ export const BreedsTable = () => {
 
   // utils
   const dispatch = useAppDispatch()
-
   // api
   const {
     data: breedsResponse,
